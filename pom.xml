@@ -87,12 +87,12 @@
             <id>prod</id>
             <properties>
                 <profiles.active>prod</profiles.active>
-                <nacos.server>127.0.0.1:8848</nacos.server>
+                <nacos.server>bpm-nacos:8848</nacos.server>
                 <nacos.discovery.group>DEFAULT_GROUP</nacos.discovery.group>
                 <nacos.config.group>DEFAULT_GROUP</nacos.config.group>
                 <nacos.username>nacos</nacos.username>
                 <nacos.password>nacos</nacos.password>
-                <logstash.address>127.0.0.1:4560</logstash.address>
+                <logstash.address>logstash:4560</logstash.address>
             </properties>
         </profile>
     </profiles>
@@ -373,12 +373,12 @@
     </dependencyManagement>
 
     <modules>
-        <module>ruoyi-auth</module>
-        <module>ruoyi-gateway</module>
-        <module>ruoyi-visual</module>
-        <module>ruoyi-modules</module>
-        <module>ruoyi-api</module>
-        <module>ruoyi-common</module>
+        <module>bpm-auth</module>
+        <module>bpm-gateway</module>
+        <module>bpm-visual</module>
+        <module>bpm-modules</module>
+        <module>bpm-api</module>
+        <module>bpm-common</module>
         <module>ruoyi-example</module>
     </modules>
     <packaging>pom</packaging>
