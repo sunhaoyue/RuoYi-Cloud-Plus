@@ -2,7 +2,7 @@
   <configuration default="false" name="bpm-system" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
     <deployment type="dockerfile">
       <settings>
-        <option name="imageTag" value="bpmi/bpm-system:2.4.1" />
+        <option name="imageTag" value="bpm/bpm-system:2.4.1" />
         <option name="buildOnly" value="true" />
         <option name="sourceFilePath" value="bpm-modules/bpm-system/Dockerfile" />
       </settings>

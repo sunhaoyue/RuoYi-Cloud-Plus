@@ -11,7 +11,7 @@
     <artifactId>bpm-auth</artifactId>
 
     <description>
-        ruoyi-auth 认证授权中心
+        bpm-auth 认证授权中心
     </description>
 
     <dependencies>
