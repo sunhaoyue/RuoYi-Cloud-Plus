@@ -4,6 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -17,9 +18,7 @@ import org.dromara.common.mybatis.core.domain.BaseEntity;
 import org.dromara.common.mybatis.core.page.PageQuery;
 import org.dromara.common.mybatis.core.page.TableDataInfo;
 import org.dromara.common.tenant.helper.TenantHelper;
-import org.dromara.workflow.api.domain.RemoteCompleteTask;
 import org.dromara.workflow.api.domain.RemoteStartProcess;
-import org.dromara.workflow.api.domain.RemoteStartProcessReturn;
 import org.dromara.workflow.api.event.ProcessDeleteEvent;
 import org.dromara.workflow.api.event.ProcessEvent;
 import org.dromara.workflow.api.event.ProcessTaskEvent;
@@ -112,6 +111,7 @@ public class TestLeaveServiceImpl implements ITestLeaveService {
         TestLeave add = MapstructUtils.convert(bo, TestLeave.class);
         if (StringUtils.isBlank(add.getStatus())) {
             add.setStatus(BusinessStatusEnum.DRAFT.getStatus());
+            add.setApplyCode(System.currentTimeMillis() + StrUtil.EMPTY);
         }
         boolean flag = baseMapper.insert(add) > 0;
         if (flag) {
@@ -132,16 +132,15 @@ public class TestLeaveServiceImpl implements ITestLeaveService {
             bo.setId(leave.getId());
             // 后端发起需要忽略权限
             bo.getParams().put("ignore", true);
-            RemoteStartProcessReturn result = workflowService.startWorkFlow(new RemoteStartProcess() {{
-                setBusinessId(leave.getId().toString());
-                setFlowCode(StringUtils.isEmpty(bo.getFlowCode()) ? "leave1" : bo.getFlowCode());
-                setVariables(bo.getParams());
-            }});
-            boolean flag1 = workflowService.completeTask(new RemoteCompleteTask() {{
-                setTaskId(result.getTaskId());
-                setMessageType(List.of("1"));
-                setVariables(bo.getParams());
-            }});
+
+            RemoteStartProcess startProcess = new RemoteStartProcess();
+            startProcess.setBusinessId(leave.getId().toString());
+            startProcess.setFlowCode(StringUtils.isEmpty(bo.getFlowCode()) ? "leave1" : bo.getFlowCode());
+            startProcess.setVariables(bo.getParams());
+            // 后端发起 如果没有登录用户 比如定时任务 可以手动设置一个处理人id
+            // startProcess.setHandler("0");
+
+            boolean flag1 = workflowService.startCompleteTask(startProcess);
             if (!flag1) {
                 throw new ServiceException("流程发起异常");
             }
