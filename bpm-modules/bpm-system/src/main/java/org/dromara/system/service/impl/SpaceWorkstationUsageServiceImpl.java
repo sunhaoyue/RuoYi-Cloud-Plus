@@ -24,7 +24,7 @@ import java.util.Collection;
  * 工位使用记录Service业务层处理
  *
  * @author sunhaoyue
- * @date 2025-08-19
+ * @date 2025-08-21
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -80,7 +80,7 @@ public class SpaceWorkstationUsageServiceImpl implements ISpaceWorkstationUsageS
         lqw.eq(bo.getStartTime() != null, SpaceWorkstationUsage::getStartTime, bo.getStartTime());
         lqw.eq(bo.getEndTime() != null, SpaceWorkstationUsage::getEndTime, bo.getEndTime());
         lqw.eq(bo.getStatus() != null, SpaceWorkstationUsage::getStatus, bo.getStatus());
-        lqw.eq(bo.getIsLongTerm() != null, SpaceWorkstationUsage::getIsLongTerm, bo.getIsLongTerm());
+        lqw.eq(StringUtils.isNotBlank(bo.getIsLongTerm()), SpaceWorkstationUsage::getIsLongTerm, bo.getIsLongTerm());
         return lqw;
     }
 

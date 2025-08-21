@@ -2,10 +2,12 @@ package org.dromara.system.controller;
 
 import java.util.List;
 
+import cn.hutool.core.lang.tree.Tree;
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.*;
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import org.dromara.system.domain.bo.SysDeptBo;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
 import org.dromara.common.idempotent.annotation.RepeatSubmit;
@@ -69,6 +71,14 @@ public class SpaceTreeController extends BaseController {
         return R.ok(spaceTreeService.queryById(id));
     }
 
+    /**
+     * 获取部门树列表
+     */
+    @SaCheckPermission("system:tree:list")
+    @GetMapping("/spaceTree")
+    public R<List<Tree<Long>>> deptTree(SpaceTreeBo space) {
+        return R.ok(spaceTreeService.selectSpaceTreeList(space));
+    }
     /**
      * 新增空间树结构（工区-楼栋-楼层）
      */

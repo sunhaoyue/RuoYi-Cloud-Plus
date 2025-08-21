@@ -1,6 +1,6 @@
 package org.dromara.system.service;
 
-import org.dromara.system.domain.SpaceTree;
+import cn.hutool.core.lang.tree.Tree;
 import org.dromara.system.domain.vo.SpaceTreeVo;
 import org.dromara.system.domain.bo.SpaceTreeBo;
 
@@ -32,6 +32,21 @@ public interface ISpaceTreeService {
      */
     List<SpaceTreeVo> queryList(SpaceTreeBo bo);
 
+    /**
+     * 查询空间工区树结构信息
+     *
+     * @param space 空间信息
+     * @return 部门树信息集合
+     */
+    List<Tree<Long>> selectSpaceTreeList(SpaceTreeBo space);
+
+    /**
+     * 构建前端所需要下拉树结构
+     *
+     * @param spaceTrees 空间区域列表
+     * @return 下拉树结构列表
+     */
+    List<Tree<Long>> buildSpaceTreeSelect(List<SpaceTreeVo> spaceTrees);
     /**
      * 新增空间树结构（工区-楼栋-楼层）
      *

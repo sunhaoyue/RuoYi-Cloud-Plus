@@ -8,7 +8,7 @@ import org.dromara.common.mybatis.core.mapper.BaseMapperPlus;
  * 工位使用记录Mapper接口
  *
  * @author sunhaoyue
- * @date 2025-08-19
+ * @date 2025-08-21
  */
 public interface SpaceWorkstationUsageMapper extends BaseMapperPlus<SpaceWorkstationUsage, SpaceWorkstationUsageVo> {
 

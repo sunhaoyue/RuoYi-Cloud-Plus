@@ -20,7 +20,7 @@ import java.util.Date;
  * 工位使用记录视图对象 space_workstation_usage
  *
  * @author sunhaoyue
- * @date 2025-08-19
+ * @date 2025-08-21
  */
 @Data
 @ExcelIgnoreUnannotated
@@ -37,21 +37,21 @@ public class SpaceWorkstationUsageVo implements Serializable {
     private Long id;
 
     /**
-     * 使用员工ID，关联sys_user.user_id
+     * 使用员工
      */
-    @ExcelProperty(value = "使用员工ID，关联sys_user.user_id")
+    @ExcelProperty(value = "使用员工")
     private Long employeeId;
 
     /**
-     * 使用工位ID，关联space_workstations.id
+     * 使用工位
      */
-    @ExcelProperty(value = "使用工位ID，关联space_workstations.id")
+    @ExcelProperty(value = "使用工位")
     private Long workstationId;
 
     /**
-     * 使用类型:1-固定分配 2-流动预定
+     * 使用类型
      */
-    @ExcelProperty(value = "使用类型:1-固定分配 2-流动预定", converter = ExcelDictConvert.class)
+    @ExcelProperty(value = "使用类型", converter = ExcelDictConvert.class)
     @ExcelDictFormat(dictType = "space_usage_type")
     private Long usageType;
 
@@ -62,23 +62,24 @@ public class SpaceWorkstationUsageVo implements Serializable {
     private Date startTime;
 
     /**
-     * 使用结束时间(NULL表示长期使用)
+     * 使用结束时间
      */
-    @ExcelProperty(value = "使用结束时间(NULL表示长期使用)")
+    @ExcelProperty(value = "使用结束时间")
     private Date endTime;
 
     /**
-     * 记录状态:0-已取消 1-有效中 2-已完成
+     * 记录状态
      */
-    @ExcelProperty(value = "记录状态:0-已取消 1-有效中 2-已完成", converter = ExcelDictConvert.class)
+    @ExcelProperty(value = "记录状态", converter = ExcelDictConvert.class)
     @ExcelDictFormat(dictType = "space_status")
     private Long status;
 
     /**
      * 是否长期分配标志
      */
-    @ExcelProperty(value = "是否长期分配标志")
-    private Long isLongTerm;
+    @ExcelProperty(value = "是否长期分配标志", converter = ExcelDictConvert.class)
+    @ExcelDictFormat(dictType = "sys_yes_no")
+    private String isLongTerm;
 
     /**
      * 使用备注信息

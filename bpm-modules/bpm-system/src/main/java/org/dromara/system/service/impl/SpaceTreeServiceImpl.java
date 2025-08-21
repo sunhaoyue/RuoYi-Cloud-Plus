@@ -1,12 +1,16 @@
 package org.dromara.system.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.tree.Tree;
+import org.dromara.common.core.constant.SystemConstants;
 import org.dromara.common.core.utils.MapstructUtils;
 import org.dromara.common.core.utils.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.system.domain.SysDept;
+import org.dromara.common.core.utils.TreeBuildUtils;
+import org.dromara.system.domain.vo.SysDeptVo;
 import org.springframework.stereotype.Service;
 import org.dromara.system.domain.bo.SpaceTreeBo;
 import org.dromara.system.domain.vo.SpaceTreeVo;
@@ -55,6 +59,19 @@ public class SpaceTreeServiceImpl implements ISpaceTreeService {
         return baseMapper.selectVoList(lqw);
     }
 
+    /**
+     * 查询空间工区树结构信息
+     *
+     * @param spaceBo 空间信息
+     * @return 部门树信息集合
+     */
+    @Override
+    public List<Tree<Long>> selectSpaceTreeList(SpaceTreeBo spaceBo) {
+        LambdaQueryWrapper<SpaceTree> lqw = buildQueryWrapper(spaceBo);
+        List<SpaceTreeVo> spaces = baseMapper.selectVoList(lqw);
+        return buildSpaceTreeSelect(spaces);
+    }
+
     private LambdaQueryWrapper<SpaceTree> buildQueryWrapper(SpaceTreeBo bo) {
         Map<String, Object> params = bo.getParams();
         LambdaQueryWrapper<SpaceTree> lqw = Wrappers.lambdaQuery();
@@ -70,7 +87,28 @@ public class SpaceTreeServiceImpl implements ISpaceTreeService {
 
         return lqw;
     }
-
+    /**
+     * 构建前端所需要下拉树结构
+     *
+     * @param spaceTrees 部门列表
+     * @return 下拉树结构列表
+     */
+    @Override
+    public List<Tree<Long>> buildSpaceTreeSelect(List<SpaceTreeVo> spaceTrees) {
+        if (CollUtil.isEmpty(spaceTrees)) {
+            return CollUtil.newArrayList();
+        }
+        return TreeBuildUtils.buildMultiRoot(
+            spaceTrees,
+            SpaceTreeVo::getId,
+            SpaceTreeVo::getParentId,
+            (node, treeNode) -> treeNode
+                .setId(node.getId())
+                .setParentId(node.getParentId())
+                .setName(node.getName())
+                .setWeight(node.getSort())
+        );
+    }
     /**
      * 新增空间树结构（工区-楼栋-楼层）
      *

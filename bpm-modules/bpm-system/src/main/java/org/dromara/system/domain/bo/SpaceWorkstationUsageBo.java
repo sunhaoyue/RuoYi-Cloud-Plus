@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * 工位使用记录业务对象 space_workstation_usage
  *
  * @author sunhaoyue
- * @date 2025-08-19
+ * @date 2025-08-21
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -29,21 +29,21 @@ public class SpaceWorkstationUsageBo extends BaseEntity {
     private Long id;
 
     /**
-     * 使用员工ID，关联sys_user.user_id
+     * 使用员工
      */
-    @NotNull(message = "使用员工ID，关联sys_user.user_id不能为空", groups = { AddGroup.class, EditGroup.class })
+    @NotNull(message = "使用员工不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long employeeId;
 
     /**
-     * 使用工位ID，关联space_workstations.id
+     * 使用工位
      */
-    @NotNull(message = "使用工位ID，关联space_workstations.id不能为空", groups = { AddGroup.class, EditGroup.class })
+    @NotNull(message = "使用工位不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long workstationId;
 
     /**
-     * 使用类型:1-固定分配 2-流动预定
+     * 使用类型
      */
-    @NotNull(message = "使用类型:1-固定分配 2-流动预定不能为空", groups = { AddGroup.class, EditGroup.class })
+    @NotNull(message = "使用类型不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long usageType;
 
     /**
@@ -53,19 +53,19 @@ public class SpaceWorkstationUsageBo extends BaseEntity {
     private Date startTime;
 
     /**
-     * 使用结束时间(NULL表示长期使用)
+     * 使用结束时间
      */
     private Date endTime;
 
     /**
-     * 记录状态:0-已取消 1-有效中 2-已完成
+     * 记录状态
      */
     private Long status;
 
     /**
      * 是否长期分配标志
      */
-    private Long isLongTerm;
+    private String isLongTerm;
 
     /**
      * 使用备注信息
