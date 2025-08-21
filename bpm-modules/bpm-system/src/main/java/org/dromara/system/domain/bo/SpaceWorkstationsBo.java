@@ -13,7 +13,7 @@ import jakarta.validation.constraints.*;
  * 工位主业务对象 space_workstations
  *
  * @author sunhaoyue
- * @date 2025-08-19
+ * @date 2025-08-21
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -33,22 +33,27 @@ public class SpaceWorkstationsBo extends BaseEntity {
     private String workstationCode;
 
     /**
-     * 所属楼栋ID，关联space_buildings.id
+     * 工位名称(可选)
      */
-    private Long buildingId;
+    private String workstationName;
 
     /**
-     * 工位所在楼层(必须大于0)
+     * 所属空间
+     */
+    private Long spaceId;
+
+    /**
+     * 工位所在楼层
      */
     private Long floor;
 
     /**
-     * 工位状态:0-空闲 1-使用中 2-维护中
+     * 工位状态
      */
     private Long status;
 
     /**
-     * 使用类型:1-固定工位 2-流动工位
+     * 使用类型
      */
     private Long usageType;
 

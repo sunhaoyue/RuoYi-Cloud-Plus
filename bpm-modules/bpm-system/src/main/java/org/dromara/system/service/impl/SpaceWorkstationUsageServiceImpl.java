@@ -74,8 +74,9 @@ public class SpaceWorkstationUsageServiceImpl implements ISpaceWorkstationUsageS
         Map<String, Object> params = bo.getParams();
         LambdaQueryWrapper<SpaceWorkstationUsage> lqw = Wrappers.lambdaQuery();
         lqw.orderByAsc(SpaceWorkstationUsage::getId);
-        lqw.eq(bo.getEmployeeId() != null, SpaceWorkstationUsage::getEmployeeId, bo.getEmployeeId());
+        lqw.eq(bo.getUserId() != null, SpaceWorkstationUsage::getUserId, bo.getUserId());
         lqw.eq(bo.getWorkstationId() != null, SpaceWorkstationUsage::getWorkstationId, bo.getWorkstationId());
+        lqw.eq(bo.getSpaceId() != null, SpaceWorkstationUsage::getSpaceId, bo.getSpaceId());
         lqw.eq(bo.getUsageType() != null, SpaceWorkstationUsage::getUsageType, bo.getUsageType());
         lqw.eq(bo.getStartTime() != null, SpaceWorkstationUsage::getStartTime, bo.getStartTime());
         lqw.eq(bo.getEndTime() != null, SpaceWorkstationUsage::getEndTime, bo.getEndTime());

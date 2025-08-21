@@ -2,7 +2,6 @@ package org.dromara.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.tree.Tree;
-import org.dromara.common.core.constant.SystemConstants;
 import org.dromara.common.core.utils.MapstructUtils;
 import org.dromara.common.core.utils.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -10,7 +9,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.common.core.utils.TreeBuildUtils;
-import org.dromara.system.domain.vo.SysDeptVo;
 import org.springframework.stereotype.Service;
 import org.dromara.system.domain.bo.SpaceTreeBo;
 import org.dromara.system.domain.vo.SpaceTreeVo;

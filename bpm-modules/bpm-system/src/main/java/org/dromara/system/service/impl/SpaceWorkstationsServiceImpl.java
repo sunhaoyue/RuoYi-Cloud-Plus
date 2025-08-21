@@ -24,7 +24,7 @@ import java.util.Collection;
  * 工位主Service业务层处理
  *
  * @author sunhaoyue
- * @date 2025-08-19
+ * @date 2025-08-21
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -75,7 +75,8 @@ public class SpaceWorkstationsServiceImpl implements ISpaceWorkstationsService {
         LambdaQueryWrapper<SpaceWorkstations> lqw = Wrappers.lambdaQuery();
         lqw.orderByAsc(SpaceWorkstations::getId);
         lqw.eq(StringUtils.isNotBlank(bo.getWorkstationCode()), SpaceWorkstations::getWorkstationCode, bo.getWorkstationCode());
-        lqw.eq(bo.getBuildingId() != null, SpaceWorkstations::getBuildingId, bo.getBuildingId());
+        lqw.like(StringUtils.isNotBlank(bo.getWorkstationName()), SpaceWorkstations::getWorkstationName, bo.getWorkstationName());
+        lqw.eq(bo.getSpaceId() != null, SpaceWorkstations::getSpaceId, bo.getSpaceId());
         lqw.eq(bo.getFloor() != null, SpaceWorkstations::getFloor, bo.getFloor());
         lqw.eq(bo.getStatus() != null, SpaceWorkstations::getStatus, bo.getStatus());
         lqw.eq(bo.getUsageType() != null, SpaceWorkstations::getUsageType, bo.getUsageType());

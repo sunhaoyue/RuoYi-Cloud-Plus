@@ -32,13 +32,18 @@ public class SpaceWorkstationUsageBo extends BaseEntity {
      * 使用员工
      */
     @NotNull(message = "使用员工不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Long employeeId;
+    private Long userId;
 
     /**
      * 使用工位
      */
     @NotNull(message = "使用工位不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long workstationId;
+
+    /**
+     * 所属空间区域I
+     */
+    private Long spaceId;
 
     /**
      * 使用类型
@@ -53,7 +58,7 @@ public class SpaceWorkstationUsageBo extends BaseEntity {
     private Date startTime;
 
     /**
-     * 使用结束时间
+     * 使用结束时间(NULL表示长期使用)
      */
     private Date endTime;
 

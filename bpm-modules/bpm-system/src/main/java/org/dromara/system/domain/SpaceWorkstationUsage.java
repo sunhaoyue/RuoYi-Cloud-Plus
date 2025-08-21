@@ -32,12 +32,17 @@ public class SpaceWorkstationUsage extends TenantEntity {
     /**
      * 使用员工
      */
-    private Long employeeId;
+    private Long userId;
 
     /**
      * 使用工位
      */
     private Long workstationId;
+
+    /**
+     * 所属空间区域I
+     */
+    private Long spaceId;
 
     /**
      * 使用类型
@@ -50,7 +55,7 @@ public class SpaceWorkstationUsage extends TenantEntity {
     private Date startTime;
 
     /**
-     * 使用结束时间
+     * 使用结束时间(NULL表示长期使用)
      */
     private Date endTime;
 

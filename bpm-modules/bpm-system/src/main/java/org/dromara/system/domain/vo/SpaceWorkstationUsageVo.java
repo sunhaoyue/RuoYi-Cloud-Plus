@@ -40,13 +40,19 @@ public class SpaceWorkstationUsageVo implements Serializable {
      * 使用员工
      */
     @ExcelProperty(value = "使用员工")
-    private Long employeeId;
+    private Long userId;
 
     /**
      * 使用工位
      */
     @ExcelProperty(value = "使用工位")
     private Long workstationId;
+
+    /**
+     * 所属空间区域I
+     */
+    @ExcelProperty(value = "所属空间区域I")
+    private Long spaceId;
 
     /**
      * 使用类型
@@ -62,9 +68,9 @@ public class SpaceWorkstationUsageVo implements Serializable {
     private Date startTime;
 
     /**
-     * 使用结束时间
+     * 使用结束时间(NULL表示长期使用)
      */
-    @ExcelProperty(value = "使用结束时间")
+    @ExcelProperty(value = "使用结束时间(NULL表示长期使用)")
     private Date endTime;
 
     /**
