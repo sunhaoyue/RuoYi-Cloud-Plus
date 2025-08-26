@@ -74,7 +74,7 @@ public class SpaceTreeController extends BaseController {
      */
     @SaCheckPermission("system:tree:list")
     @GetMapping("/spaceTree")
-    public R<List<Tree<Long>>> deptTree(SpaceTreeBo space) {
+    public R<List<Tree<Long>>> spaceTree(SpaceTreeBo space) {
         return R.ok(spaceTreeService.selectSpaceTreeList(space));
     }
     /**

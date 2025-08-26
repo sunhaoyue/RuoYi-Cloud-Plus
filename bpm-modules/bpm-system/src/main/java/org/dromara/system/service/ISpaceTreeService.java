@@ -33,6 +33,12 @@ public interface ISpaceTreeService {
     List<SpaceTreeVo> queryList(SpaceTreeBo bo);
 
     /**
+     *
+     * @param spaceIds
+     * @return
+     */
+    String selectSpaceNameByIds(String spaceIds);
+    /**
      * 查询空间工区树结构信息
      *
      * @param space 空间信息

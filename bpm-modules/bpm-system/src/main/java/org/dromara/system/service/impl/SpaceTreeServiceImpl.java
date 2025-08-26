@@ -1,14 +1,18 @@
 package org.dromara.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.util.ObjectUtil;
 import org.dromara.common.core.utils.MapstructUtils;
+import org.dromara.common.core.utils.SpringUtils;
 import org.dromara.common.core.utils.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.common.core.utils.TreeBuildUtils;
+import org.dromara.system.domain.vo.SysDeptVo;
 import org.springframework.stereotype.Service;
 import org.dromara.system.domain.bo.SpaceTreeBo;
 import org.dromara.system.domain.vo.SpaceTreeVo;
@@ -16,6 +20,7 @@ import org.dromara.system.domain.SpaceTree;
 import org.dromara.system.mapper.SpaceTreeMapper;
 import org.dromara.system.service.ISpaceTreeService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Collection;
@@ -55,6 +60,24 @@ public class SpaceTreeServiceImpl implements ISpaceTreeService {
     public List<SpaceTreeVo> queryList(SpaceTreeBo bo) {
         LambdaQueryWrapper<SpaceTree> lqw = buildQueryWrapper(bo);
         return baseMapper.selectVoList(lqw);
+    }
+
+    /**
+     * 通过部门ID查询部门名称
+     *
+     * @param spaceIds 部门ID串逗号分隔
+     * @return 部门名称串逗号分隔
+     */
+    @Override
+    public String selectSpaceNameByIds(String spaceIds) {
+        List<String> list = new ArrayList<>();
+        for (Long id : StringUtils.splitTo(spaceIds, Convert::toLong)) {
+            SpaceTreeVo vo = SpringUtils.getAopProxy(this).queryById(id);
+            if (ObjectUtil.isNotNull(vo)) {
+                list.add(vo.getName());
+            }
+        }
+        return StringUtils.joinComma(list);
     }
 
     /**

@@ -1,5 +1,7 @@
 package org.dromara.system.domain.vo;
 
+import org.dromara.common.translation.annotation.Translation;
+import org.dromara.common.translation.constant.TransConstant;
 import org.dromara.system.domain.SpaceWorkstations;
 import cn.idev.excel.annotation.ExcelIgnoreUnannotated;
 import cn.idev.excel.annotation.ExcelProperty;
@@ -10,7 +12,6 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
 
 
 
@@ -72,5 +73,10 @@ public class SpaceWorkstationsVo implements Serializable {
     @ExcelDictFormat(dictType = "space_usage_type")
     private Long usageType;
 
+    /**
+     * 空间名
+     */
+    @Translation(type = TransConstant.SPACE_ID_TO_NAME, mapper = "id")
+    private String spaceName;
 
 }

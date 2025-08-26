@@ -141,6 +141,7 @@ public class SysUserServiceImpl implements ISysUserService {
             .and(w -> w.ne("r.role_id", user.getRoleId()).or().isNull("r.role_id"))
             .notIn(CollUtil.isNotEmpty(userIds), "u.user_id", userIds)
             .like(StringUtils.isNotBlank(user.getUserName()), "u.user_name", user.getUserName())
+            .like(StringUtils.isNotBlank(user.getNickName()), "u.nick_name", user.getNickName())
             .like(StringUtils.isNotBlank(user.getPhonenumber()), "u.phonenumber", user.getPhonenumber())
             .orderByAsc("u.user_id");
         Page<SysUserVo> page = baseMapper.selectUnallocatedList(pageQuery.build(), wrapper);

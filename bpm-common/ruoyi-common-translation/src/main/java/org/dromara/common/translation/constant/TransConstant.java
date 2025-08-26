@@ -33,4 +33,9 @@ public interface TransConstant {
      */
     String OSS_ID_TO_URL = "oss_id_to_url";
 
+    /**
+     * 空间转名称
+     */
+    String SPACE_ID_TO_NAME = "space_id_to_name";
+
 }
