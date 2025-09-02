@@ -1,33 +1,40 @@
 package org.dromara.workflow.listener;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.dromara.common.core.enums.BusinessStatusEnum;
+import org.dromara.common.core.utils.StreamUtils;
 import org.dromara.common.core.utils.StringUtils;
+import org.dromara.system.api.RemoteUserService;
+import org.dromara.warm.flow.core.FlowEngine;
 import org.dromara.warm.flow.core.dto.FlowParams;
 import org.dromara.warm.flow.core.entity.Definition;
 import org.dromara.warm.flow.core.entity.Instance;
 import org.dromara.warm.flow.core.entity.Task;
 import org.dromara.warm.flow.core.listener.GlobalListener;
 import org.dromara.warm.flow.core.listener.ListenerVariable;
-import org.dromara.warm.flow.core.service.InsService;
 import org.dromara.workflow.common.ConditionalOnEnable;
 import org.dromara.workflow.common.constant.FlowConstant;
 import org.dromara.workflow.common.enums.TaskStatusEnum;
 import org.dromara.workflow.domain.bo.FlowCopyBo;
+import org.dromara.workflow.domain.vo.NodeExtVo;
 import org.dromara.workflow.handler.FlowProcessEventHandler;
 import org.dromara.workflow.service.IFlwCommonService;
 import org.dromara.workflow.service.IFlwInstanceService;
+import org.dromara.workflow.service.IFlwNodeExtService;
 import org.dromara.workflow.service.IFlwTaskService;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 全局任务办理监听
@@ -41,10 +48,13 @@ import java.util.Map;
 public class WorkflowGlobalListener implements GlobalListener {
 
     private final IFlwTaskService flwTaskService;
-    private final IFlwInstanceService instanceService;
+    private final IFlwInstanceService flwInstanceService;
     private final FlowProcessEventHandler flowProcessEventHandler;
     private final IFlwCommonService flwCommonService;
-    private final InsService insService;
+    private final IFlwNodeExtService nodeExtService;
+
+    @DubboReference
+    private RemoteUserService remoteUserService;
 
     /**
      * 创建监听器，任务创建时执行
@@ -63,6 +73,25 @@ public class WorkflowGlobalListener implements GlobalListener {
      */
     @Override
     public void start(ListenerVariable listenerVariable) {
+        String ext = listenerVariable.getNode().getExt();
+        if (StringUtils.isNotBlank(ext)) {
+            NodeExtVo nodeExt = nodeExtService.parseNodeExt(ext);
+            Map<String, Object> variable = listenerVariable.getVariable();
+            Set<String> copyList = nodeExt.getCopySettings();
+            if (CollUtil.isNotEmpty(copyList)) {
+                List<FlowCopyBo> list = StreamUtils.toList(copyList, x -> {
+                    FlowCopyBo bo = new FlowCopyBo();
+                    Long id = Convert.toLong(x);
+                    bo.setUserId(id);
+                    bo.setUserName(remoteUserService.selectUserNameById(id));
+                    return bo;
+                });
+                variable.put(FlowConstant.FLOW_COPY_LIST, list);
+            }
+            if (CollUtil.isNotEmpty(nodeExt.getVariables())) {
+                variable.putAll(nodeExt.getVariables());
+            }
+        }
     }
 
     /**
@@ -132,7 +161,7 @@ public class WorkflowGlobalListener implements GlobalListener {
                     flowProcessEventHandler.processHandler(definition.getFlowCode(), instance, BusinessStatusEnum.BACK.getStatus(), params, false);
                     // 修改流程实例状态
                     instance.setFlowStatus(BusinessStatusEnum.BACK.getStatus());
-                    insService.updateById(instance);
+                    FlowEngine.insService().updateById(instance);
                 }
             }
         }
@@ -161,12 +190,9 @@ public class WorkflowGlobalListener implements GlobalListener {
         if (variable.containsKey(FlowConstant.MESSAGE_TYPE)) {
             List<String> messageType = MapUtil.get(variable, FlowConstant.MESSAGE_TYPE, new TypeReference<>() {});
             String notice = MapUtil.getStr(variable, FlowConstant.MESSAGE_NOTICE);
-            // 消息通知
-            if (CollUtil.isNotEmpty(messageType)) {
-                flwCommonService.sendMessage(definition.getFlowName(), instance.getId(), messageType, notice);
-            }
+            flwCommonService.sendMessage(definition.getFlowName(), instance.getId(), messageType, notice);
         }
-        insService.removeVariables(instance.getId(),
+        FlowEngine.insService().removeVariables(instance.getId(),
             FlowConstant.FLOW_COPY_LIST,
             FlowConstant.MESSAGE_TYPE,
             FlowConstant.MESSAGE_NOTICE,
@@ -190,7 +216,7 @@ public class WorkflowGlobalListener implements GlobalListener {
             if (flwTaskService.isTaskEnd(instanceId)) {
                 String status = BusinessStatusEnum.FINISH.getStatus();
                 // 更新流程状态为已完成
-                instanceService.updateStatus(instanceId, status);
+                flwInstanceService.updateStatus(instanceId, status);
                 log.info("流程已结束，状态更新为: {}", status);
                 return status;
             }
